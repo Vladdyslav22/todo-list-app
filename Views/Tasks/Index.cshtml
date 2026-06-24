@@ -1,0 +1,47 @@
+﻿@model IEnumerable<ToDoListApp.Models.TaskItem>
+@using ToDoListApp.Models
+
+@{
+    ViewData["Title"] = "ToDo List";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">📝 Moja Lista Zadań</h1>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a asp-action="Create" class="btn btn-success">➕ Dodaj nowe zadanie</a>
+
+        <div class="btn-group" role="group">
+            <a asp-action="Index" class="btn btn-outline-secondary">📋 Wszystkie</a>
+            <a asp-action="Index" asp-route-filter="undone" class="btn btn-outline-warning">⏳ Niewykonane</a>
+            <a asp-action="Index" asp-route-filter="done" class="btn btn-outline-success">✔️ Wykonane</a>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card border-@(item.IsDone ? "success" : "secondary") shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text">
+                            <strong>Status:</strong>
+                            <form asp-action="ToggleDone" method="post" class="form-inline d-inline">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <input type="checkbox" onchange="this.form.submit()" @(item.IsDone ? "checked" : "") />
+                            </form>
+                            @(item.IsDone ? "✔️ Wykonane" : "❌ Niewykonane")<br />
+
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">✏️</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">ℹ️</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">🗑️</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
